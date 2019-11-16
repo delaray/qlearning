@@ -38,7 +38,7 @@
   (apply max (state-rewards Q-table state action)))
 
 ;;;------------------------------------------------------------------
-;;; Updaing the Q-Table
+;;; Updating the Q-Table
 ;;;------------------------------------------------------------------
 
 ;;; This implements the Q-Learning update rule: The immediate reward
@@ -91,7 +91,7 @@
 ;;; Extracting the Optimal Policy
 ;;;------------------------------------------------------------------
 
-;;; Retuens a vector of <optimal-action> and <next-state>
+;;; Returns a vector of <optimal-action> and <next-state>
 
 (defn optimal-action [state Q-table]
   (let [best (first (sort (fn [[a1 [state-1 val-1]][a2 [staten-2 val-2]]]
@@ -116,9 +116,65 @@
                    (last next-action)
                    (inc path-size))))))
 
+;;;******************************************************************
+;;; Part 2: Automatic Grid World Domain Generation
+;;;******************************************************************
+
+;;;------------------------------------------------------------------
+;;; Generate Grid World
+;;;------------------------------------------------------------------
+
+;;; Creates a state name from i & j.
+
+(defn make-state-name [i j]
+  (keyword (str "s-" i "-" j)))
+
+;;;------------------------------------------------------------------
+
+;;; Note: Only works for single digit coordinates.
+
+(defn state-coordinates [state-name]
+  [(read-string (subs (name state-name) 2 3))
+   (read-string (subs (name state-name) 4 5))])
+
+;;;------------------------------------------------------------------
+
+
+(defn make-state-entry [i j rows cols fs]
+  (let [[fs-i fs-j](state-coordinates fs)]
+    (apply merge
+           `(~(when (< j cols)
+                {:east [(make-state-name i (inc j))
+                        (if (and (= i fs-i) (= j (dec fs-j))) 100 0)]})
+              ~(when (> j 1)
+                 {:west [(make-state-name i (dec j))
+                         (if (and (= i fs-i)(= j (inc fs-j))) 100 0)]})
+              ~(when (> i 1)
+                 {:north [(make-state-name (dec i) j)
+                          (if (and (= i (inc fs-i)) (= j fs-j)) 100 0)]})
+              ~(when (< i rows)
+                 {:south [(make-state-name (inc i) j)
+                          (if (and (= i (dec fs-i)) (= j fs-j)) 100 0)]})))))
+
+;;;------------------------------------------------------------------
+
+;;; Returns a grid world map with dimensions rows x columns and with
+;;; fs as the final state.
+
+(defn generate-grid-world [rows cols fs]
+  (let [cells (for [i (range 1 (inc rows)) j (range 1 (inc cols))][i j])]
+    (reduce (fn [acc [i j]]
+              (assoc acc
+                (make-state-name i j)
+                (make-state-entry i j rows cols fs)))
+            {}
+            cells)))
+
 ;;;------------------------------------------------------------------
 ;;; Output
 ;;;------------------------------------------------------------------
+
+;;; Displays the specified Q-Table is a user readable manner.
 
 (defn show-Q-table [table]
   (let [table (into (sorted-map) table)]
@@ -126,8 +182,13 @@
           (keys table))
     nil))
 
+
+;;;******************************************************************
+;;; Part 3: Examples
+;;;******************************************************************
+
 ;;;------------------------------------------------------------------
-;;; Example 1: Simple Grid from Tom Mitchell's ML book.
+;;; Example 1: Simple Grid World example from Tom Mitchell's ML book.
 ;;;------------------------------------------------------------------
 
 ;;; Initial state is :s1 and goal stat is :s3.
@@ -153,49 +214,7 @@
     (print op)))
 
 ;;;------------------------------------------------------------------
-;;; Examle 2: Arbitrary Grid Worlds
-;;;------------------------------------------------------------------
-
-(defn make-state-name [i j]
-  (keyword (str "s-" i "-" j)))
-
-;;;------------------------------------------------------------------
-
-;;; Note: Only works for single digit coordinates.
-
-(defn state-coordinates [state-name]
-  [(read-string (subs (name state-name) 2 3))
-   (read-string (subs (name state-name) 4 5))])
-
-;;;------------------------------------------------------------------
-
-(defn make-state-entry [i j rows cols fs]
-  (let [[fs-i fs-j](state-coordinates fs)]
-    (apply merge
-           `(~(when (< j cols)
-                {:east [(make-state-name i (inc j))
-                        (if (and (= i fs-i) (= j (dec fs-j))) 100 0)]})
-             ~(when (> j 1)
-                {:west [(make-state-name i (dec j))
-                        (if (and (= i fs-i)(= j (inc fs-j))) 100 0)]})
-             ~(when (> i 1)
-                {:north [(make-state-name (dec i) j)
-                         (if (and (= i (inc fs-i)) (= j fs-j)) 100 0)]})
-             ~(when (< i rows)
-                {:south [(make-state-name (inc i) j)
-                         (if (and (= i (dec fs-i)) (= j fs-j)) 100 0)]})))))
-
-;;;------------------------------------------------------------------
-
-(defn generate-grid-world [rows cols fs]
-  (let [cells (for [i (range 1 (inc rows)) j (range 1 (inc cols))][i j])]
-    (reduce (fn [acc [i j]]
-              (assoc acc
-                     (make-state-name i j)
-                     (make-state-entry i j rows cols fs)))
-            {}
-            cells)))
-
+;;; Example 2: 4x4 Grid World
 ;;;------------------------------------------------------------------
 
 ;;; Domain: 4 x 4 Grid, Start: top-left, Goal: bottom-right.
@@ -212,6 +231,8 @@
     (print op)))
 
 ;;;------------------------------------------------------------------
+;;; Example3 : 8x8 Grid World
+;;;------------------------------------------------------------------
 
 ;;; Domain: 8 x 8 Grid, Start: top-left, Goal: bottom-right.
 
@@ -221,6 +242,41 @@
         op (optimal-policy :s-1-1 :s-8-8 qt)]
     (print "\nLearning Q values for:\n")
     (show-Q-table grid-world)
+    (print "\n\nResulting Q values after 2000 iterations:\n")
+    (show-Q-table @qt)
+    (print "\n\nOptimal policy is:\n")
+    (print op)))
+
+;;;------------------------------------------------------------------
+;;; Example 4: 4x4 Maze World 
+;;;------------------------------------------------------------------
+
+;;; https://docs.google.com/drawings/d/1X6CWfZD7qz0FIBGY055t-wwfqRK3hpBH4gUiAW0XU4g/edit
+
+(def maze-grid {:s-1-1   {:east [:s-1-2 0]}
+                :s-1-2   {:east [:s-1-3 0], :west [:s-1-1 0]}
+                :s-1-3   {:east [:s-1-4 0], :west [:s-1-2 0]}
+                :s-1-4   {:west [:s-1-3 0], :south [:s-2-4 0]}
+                :s-2-1   {:east [:s-2-2 0], :south [:s-3-1 0]}
+                :s-2-2   {:east [:s-2-3 0], :west [:s-2-1 0]}
+                :s-2-3   {:east [:s-2-4 0], :west [:s-2-2 0]}
+                :s-2-4   {:west [:s-2-3 0], :north [:s-1-4 0]}
+                :s-3-1   {:east [:s-3-2 0], :north [:s-2-1 0], :south [:s-4-1 0]}
+                :s-3-2   {:west [:s-3-1 0], :south [:s-4-2 0]}
+                :s-3-3   {:east [:s-3-4 0], :south [:s-4-3 0]}
+                :s-3-4   {:west [:s-3-3 0], :south [:s-4-4 100]}
+                :s-4-1   {:east [:s-4-2 0], :north [:s-3-1 0]}
+                :s-4-2   {:east [:s-4-3 0], :west [:s-4-1 0], :north [:s-3-2 0]}
+                :s-4-3   {:west [:s-4-2 0], :north [:s-3-3 0]}
+                :s-4-4   {:north [:s-3-4 0]}})
+
+;;;------------------------------------------------------------------
+  
+(defn ex4 []
+  (let [qt (learnQ :s-1-1 :s-4-8 maze-grid 2000)
+        op (optimal-policy :s-1-1 :s-4-4 qt)]
+    (print "\nLearning Q values for:\n")
+    (show-Q-table maze-grid)
     (print "\n\nResulting Q values after 2000 iterations:\n")
     (show-Q-table @qt)
     (print "\n\nOptimal policy is:\n")

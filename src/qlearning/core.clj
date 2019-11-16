@@ -3,6 +3,6 @@
 
 
 (defn -main
-  "A simple demo of QLearning."
+  "A simple demo of Q-Learning."
   []
   (ex2))
