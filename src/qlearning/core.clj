@@ -1,8 +1,8 @@
 (ns qlearning.core
-  (:require [qlearning.rl :refer [ex2 ex3]]))
+  (:require [qlearning.examples :refer [ex1 ex2 ex3 ex4]]))
 
 
 (defn -main
-  "A simple demo of Q-Learning."
+  "Some Grid world examples of Q-Learning."
   []
   (ex2))
