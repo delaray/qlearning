@@ -78,8 +78,9 @@
     (show-Q-table grid-world)
     (print "\n\nResulting Q values after " iterations " iterations:\n")
     (show-Q-table @qt)
-    (print "\n\nOptimal policy is:\n")
-    (print op)))
+    (print "\n\nAn optimal policy is:\n")
+    (print op)
+    (print "\n")))
 
 ;;;******************************************************************
 ;;; Part 2: Q-Learning Grid World Examples
@@ -109,7 +110,7 @@
 
 ;;; Domain: 4 x 4 Grid, Start: top-left, Goal: bottom-right.
 
-;;; https://docs.google.com/drawings/d/1hjFtYNT7IXQS2ObO9_6c1iNaV2eSF4boJfTmvzfbw3M/edit
+;;; https://docs.google.com/drawings/d/1hjFtYNT7IXQS2ObO9_6c1iNaV2eSF4boJfTmvzfbw3M
 
 (defn ex2 []
   (let [grid-world (generate-grid-world 4 4 :s-4-4)]
@@ -131,7 +132,7 @@
 
 ;;; Doamin: 4x4 Grid Maze Example, Start: top-left, Goal: bottom-right.
 
-;;; https://docs.google.com/drawings/d/1X6CWfZD7qz0FIBGY055t-wwfqRK3hpBH4gUiAW0XU4g/edit
+;;; https://docs.google.com/drawings/d/1X6CWfZD7qz0FIBGY055t-wwfqRK3hpBH4gUiAW0XU4g
 
 (def grid-maze {:s-1-1   {:east [:s-1-2 0]}
                 :s-1-2   {:east [:s-1-3 0], :west [:s-1-1 0], :south [:s-2-2 0]}

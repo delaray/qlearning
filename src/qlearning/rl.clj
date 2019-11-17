@@ -8,6 +8,8 @@
 ;;; This implements the Q-Learning algorithm of Chapter 13 of Tom
 ;;; Mitchell's book "Machine Learning".
 
+;;; URL: http://profsite.um.ac.ir/~monsefi/machine-learning/pdf/Machine-Learning-Tom-Mitchell.pdf
+
 ;;;------------------------------------------------------------------
 
 (def gamma 0.9)
