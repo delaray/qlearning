@@ -80,7 +80,7 @@
     (show-Q-table @qt)
     (print "\n\nAn optimal policy is:\n")
     (print op)
-    (print "\n")))
+    (print "\n\n")))
 
 ;;;******************************************************************
 ;;; Part 2: Q-Learning Grid World Examples
