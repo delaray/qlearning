@@ -27,11 +27,11 @@ Details for examples 2 & 4 can be found here:
 
 Here is a simple workshop project:
 
-[Non-deterministic Q-Learning](https://docs.google.com/document/d/1dgaWA-jEtcV6EWouSDdieMWtBBPTMq-Nvo-rrOz_uPM/edit)
+[Non-deterministic Q-Learning](https://docs.google.com/document/d/1dgaWA-jEtcV6EWouSDdieMWtBBPTMq-Nvo-rrOz_uPM)
 
 ## Resources
 
-[Clojure Resources](https://docs.google.com/document/d/1Lp0_vJ5VzjH66LjxRxo_p8hRhQJ4jXE9lfftpqpbZmU/edit#heading=h.syzuknz0oqm8)
+[Clojure Resources](https://docs.google.com/document/d/1dgaWA-jEtcV6EWouSDdieMWtBBPTMq-Nvo-rrOz_uPM)
 
 [Reinforcement Learning Resources](https://docs.google.com/document/d/1LPyKCQhN7qsn4GHszfXnq6G80zvxMpaxi6RJMQRgHKs)
 
