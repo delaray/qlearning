@@ -3,7 +3,7 @@
 
 
 (defn -main
-  "Some Grid world examples of Q-Learning."
+  "Run some Grid world examples of Q-Learning."
   [example]
   (print "\nRunning example number" 2 "\n")
   (cond (= example "1")

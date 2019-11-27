@@ -1,5 +1,5 @@
 (ns qlearning.examples
-  (:require [qlearning.rl :refer [learnQ optimal-policy]]))
+  (:require [qlearning.rl :refer [learn-Q optimal-policy]]))
 
 ;;;******************************************************************
 ;;; Part 1: Helper Functions for examples
@@ -55,7 +55,7 @@
             cells)))
 
 ;;;------------------------------------------------------------------
-;;; Use-Friendly Output
+;;; Display Use-Friendly Q-Table
 ;;;------------------------------------------------------------------
 
 ;;; Displays the specified Q-Table is a user readable manner.
@@ -66,13 +66,12 @@
           (keys table))
     nil))
 
-
 ;;;------------------------------------------------------------------
 ;;; Run Example
 ;;;------------------------------------------------------------------
 
 (defn run-example [start-state goal-state grid-world iterations]
-  (let [qt (learnQ start-state goal-state grid-world iterations)
+  (let [qt (learn-Q start-state goal-state grid-world iterations)
        op (optimal-policy start-state goal-state qt)]
     (print "\nLearning Q values for:\n")
     (show-Q-table grid-world)
