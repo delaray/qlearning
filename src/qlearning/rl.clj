@@ -88,7 +88,7 @@
             (recur (random-state initial-table) count)
             :else
             (let [action (random-action state initial-table)
-                  immediate-reward (immediate-reward @Q-table state action)]
+                  immediate-reward (immediate-reward initial-table state action)]
               ;; Update Q-Value estimates
               (update-Q! Q-table immediate-reward state action)
               ;; Continue episode with next state
